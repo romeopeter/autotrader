@@ -1,4 +1,4 @@
-env
+venv
 outline.txt
 .env
 docstring_style.py

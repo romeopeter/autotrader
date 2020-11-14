@@ -35,7 +35,7 @@ class Portfolio:
         Parameters
         ---------
         symbol: str
-            Financial instrument symbol/character, e.g: 'TSLA' or 'AAPL'
+            Financial instrument symbol, e.g: 'TSLA' or 'AAPL'
         asset_type: str
             The type of financial instrument, e.g: equity, stock, forex, futures, option
 
@@ -66,7 +66,19 @@ class Portfolio:
 
     def add_positions(self, positions: List(dict)) -> dict:
         """
-        Add multiple positions to portfolio
+        Add multiple positions to portfolio.
+        This method take an interable of values and pass each position
+        to the 'add_position' method
+
+        Parameter
+        --------
+        positions: List[dict]
+            List of dictionanary of multiple positions
+
+        Returns
+        -------
+        dict
+            Returns current position in portfolio
         """
 
         if isinstance(positions, list):
@@ -84,7 +96,18 @@ class Portfolio:
 
     def remove_position(self, symbol: str) -> Tuple[bool, str]:
         """
-        Remove position from portfolio
+        Removes single position from portfolio
+
+        Paremeter
+        --------
+        symbol: str
+            Symbol to identify position to be removed. e.g: 'TSLA' or 'AAPL'
+
+        Return
+        ------
+        Tuple: bool, str
+            Returns True with messsage if deleted, otherwise False
+            with message
         """
 
         if symbol in self.positions:
@@ -96,6 +119,11 @@ class Portfolio:
     def in_position(self, symbol: str) -> bool:
         """
         Checks if symbol is in portfolio
+
+        Paremeter
+        --------
+        symbol: str
+            Symbol to identify position. e.g: 'TSLA' or 'AAPL'
 
         Return
         ------
@@ -118,6 +146,9 @@ class Portfolio:
             return False
 
     def total_allocation(self):
+        """
+        Return summary of portfolio by asset allocation
+        """
         pass
 
     def risk_exposure(self):

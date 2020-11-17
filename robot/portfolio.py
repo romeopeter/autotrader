@@ -8,6 +8,8 @@ class Portfolio:
 
     def __init__(self, account_number: str = None):
         """
+        Initialies the stock portfolio object
+
         Parameters
         ---------
         account_number: str
@@ -147,7 +149,7 @@ class Portfolio:
 
     def total_allocation(self):
         """
-        Return summary of portfolio by asset allocation
+        Returns summary of portfolio by asset allocation
         """
         pass
 

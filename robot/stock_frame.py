@@ -70,6 +70,8 @@ class StockFrame:
         RollingGroupby
             A `pandas.core.window.RollingGroupby` object.
         """
+
+        # If no symbol, then create symbol
         if not self._symbol_groups:
             self.symbol_group
 
@@ -77,5 +79,22 @@ class StockFrame:
 
         return self._symbol_rolling_groups
 
-    # NEXT: Create new data frame with data passs through
-    # TIMESTAMP: 10:59
+    def create_frame(self) -> pd.DataFrame:
+        """
+        Creates a new data frame with data passed through
+        """
+
+        # Make data frame
+        price_df = pd.DataFrame(data=self._data)
+        price_df = self._parse_datetime_column(price_df=price_df)
+        price_df = self._set_multiple_index(price=price_df)
+
+        return price_df
+
+    def _parse_datetime_column(self, price_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Parses the datatime column in the dataframe
+        """
+        price_df["datetime"] = pd.to_datetime(
+            price_df["datetime"], unit="ms", origin="unix"
+        )

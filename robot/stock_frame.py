@@ -98,3 +98,45 @@ class StockFrame:
         price_df["datetime"] = pd.to_datetime(
             price_df["datetime"], unit="ms", origin="unix"
         )
+
+    def _set_multiple_index(self, price_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Convert dataframe to multi-index data frame
+        """
+
+        price_df = price_df.set_index(keys=["symbol", "datetime"])
+
+        return price_df
+
+    def add_rows(self, data: dict) -> None:
+        """
+        Adds a new row to StockFrame
+        """
+
+        column_names = ["open", "close", "high", "low", "volume"]
+
+        for quote in data:
+
+            # Parse the time stamp
+            time_stamp = pd.to_datetime(quote["datetime"], unit="ms", origin="unix")
+
+            # Define the index Tuple
+            row_id = (quote["symbol"], time_stamp)
+
+            # Define the StockFrame values
+            new_values = [
+                quote["open"],
+                quote["close"],
+                quote["high"],
+                quote["low"],
+                quote["volume"],
+            ]
+
+            # Create the new row
+            new_row = pd.Series(data=new_values)
+
+            # Add the new row
+            self.frame.loc[row_id, column_names] = new_row.values
+
+            # Sort dataframe
+            self.frame.sort_index(inplace=True)

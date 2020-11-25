@@ -88,6 +88,11 @@ class StockFrame:
     def create_frame(self) -> pd.DataFrame:
         """
         Creates a new data frame with data passed through
+
+        Return
+        ------
+        pd.DataFrame
+            A pandas datafrane
         """
 
         # Make data frame
@@ -100,10 +105,22 @@ class StockFrame:
     def _parse_datetime_column(self, price_df: pd.DataFrame) -> pd.DataFrame:
         """
         Parses the datatime column in the dataframe
+
+        Parameters
+        ----------
+        price_df: pd.DataFrame
+            Price Dataframe containting the price column
+
+        Returns
+        -------
+        pd.DataFrame
+            A pandad DataFrame object
         """
         price_df["datetime"] = pd.to_datetime(
             price_df["datetime"], unit="ms", origin="unix"
         )
+
+        return price_df
 
     def _set_multiple_index(self, price_df: pd.DataFrame) -> pd.DataFrame:
         """

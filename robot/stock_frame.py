@@ -125,6 +125,16 @@ class StockFrame:
     def _set_multiple_index(self, price_df: pd.DataFrame) -> pd.DataFrame:
         """
         Convert dataframe to multi-index data frame
+
+        Parameters
+        --------
+        price_df: pd.DataFrame
+            Price data frame object
+
+        Returns
+        -------
+        pd.DataFrame
+            A pandas dataframe
         """
 
         price_df = price_df.set_index(keys=["symbol", "datetime"])
@@ -134,25 +144,37 @@ class StockFrame:
     def add_rows(self, data: dict) -> None:
         """
         Adds a new row to StockFrame
+
+        Parameters
+        ----------
+        data: Dict
+            A stock quote
+
+        Return
+        ------
+        None
+            Returns no data
         """
 
         column_names = ["open", "close", "high", "low", "volume"]
 
-        for quote in data:
+        for symbol in data:
 
             # Parse the time stamp
-            time_stamp = pd.to_datetime(quote["datetime"], unit="ms", origin="unix")
+            time_stamp = pd.to_datetime(
+                data[symbol]["quoteTimeInLong"], unit="ms", origin="unix"
+            )
 
             # Define the index Tuple
-            row_id = (quote["symbol"], time_stamp)
+            row_id = (symbol, time_stamp)
 
             # Define the StockFrame values
             new_values = [
-                quote["open"],
-                quote["close"],
-                quote["high"],
-                quote["low"],
-                quote["volume"],
+                data[symbol]["openPrice"],
+                data[symbol]["closePrice"],
+                data[symbol]["highPrice"],
+                data[symbol]["lowPrice"],
+                data[symbol]["askPrice"] + data[symbol]["bidPrice"],
             ]
 
             # Create the new row

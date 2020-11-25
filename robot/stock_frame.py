@@ -200,5 +200,16 @@ class StockFrame:
             # Sort dataframe
             self.frame.sort_index(inplace=True)
 
-    # Add method to check if indicators exists and to check signals
-    # Know the difference btween indicators and signals
+    def do_indicators_exists(self, column_names: List[str]) -> bool:
+        """
+        Checks if indicators column exists before updating.
+        """
+
+        pass
+
+    def _check_signal(self, indicators: dict) -> Union[pd.Series, None]:
+        """
+        Returns the last row of StockFrame if conditions are met
+        """
+
+        pass

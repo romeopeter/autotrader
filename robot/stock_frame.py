@@ -11,7 +11,7 @@ from pandas.core.window import RollingGroupby
 
 class StockFrame:
     """
-    Stock frane handles all neccessary trading data requrie: price data, indicators
+   StockFrame object for manipulating and parsing stock data
     """
 
     def __init__(self, data: List[dict]) -> None:
@@ -21,8 +21,9 @@ class StockFrame:
         Parameter
         ---------
         List: List[dict]
-            Data to convert to frame, normally this from the historic price endpoint
+            Data to convert to frame, normally this is from the historic price endpoint
         """
+
         self._data = data
         self._frame: pd.DataFrame = self.create_frame()
         self._symbol_groups = None
@@ -43,13 +44,18 @@ class StockFrame:
     @property
     def symbol_group(self) -> DataFrameGroupBy:
         """
-        Returns symbol groups in the StockFrame. The '_symbol_groups' property returns dataframe groups by each symbol
+        Returns symbol groups in the StockFrame.
+
+        Overview
+        --------
+        The '_symbol_groups' property returns dataframe grouped by each symbol. This is used for performing operations on the symbol group.
 
         Returns
         -------
         DataFrameGroupBy
             A `pandas.core.groupby.GroupBy` object with each symbol.
         """
+
         self._symbol_groups = self._frame.groupby(
             by="symbol", as_index=False, sort=True
         )
@@ -75,7 +81,7 @@ class StockFrame:
         if not self._symbol_groups:
             self.symbol_group
 
-        self._symbol_rolling_groups = self._symbol_groups.rolling(size)
+        self._symbol_rolling_groups: RollingGroupby = self._symbol_groups.rolling(size)
 
         return self._symbol_rolling_groups
 
@@ -140,3 +146,6 @@ class StockFrame:
 
             # Sort dataframe
             self.frame.sort_index(inplace=True)
+
+    # Add method to check if indicators exists and to check signals
+    # Know the difference btween indicators and signals

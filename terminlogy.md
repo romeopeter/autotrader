@@ -1,6 +1,6 @@
 # Terminlogies
 
-Trading and and data analytic terminlogy that I came across when developing this program.
+Trading and and data analytic terminlogies that I came across when developing this program.
 
 ...
 

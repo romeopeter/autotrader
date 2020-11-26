@@ -203,13 +203,47 @@ class StockFrame:
     def do_indicators_exists(self, column_names: List[str]) -> bool:
         """
         Checks if indicators column exists before updating.
+
+        Overview
+        --------
+        The user can append multiple indicator column to the StockFrame object. In some cases, columns need to be modify before making trades. This method helps to check those columns exists before modifying.
+
+        Parameter
+        ---------
+        column_names: List[str]
+            List of column names to be checked
+
+        Raises
+        ------
+        KeyError: Raises KeyError if column is not found in the StockFrame.
+
+        Return
+        ------
+        bool
+            True if all columns exist, otherwise false
+
+
         """
 
         pass
 
     def _check_signal(self, indicators: dict) -> Union[pd.Series, None]:
         """
-        Returns the last row of StockFrame if conditions are met
+        Returns the last row of StockFrame if conditions are met.
+
+        Overview
+        --------
+        Before a trade is executed, make sure condition warrant a 'buy' or 'sell' signal are met. This method will take the last row for each symbol in the StockFrame and compare the indicator column values with the conditions specifies by the user.
+
+        Parameter
+        --------
+        indicators: dict
+            A dictionary containing all the indicators checked, along with their buy and sell criteria.
+
+        Return
+        ------
+        Union[pd.Series, None]
+            Return pandas.Series object if signals are generated. If no signals are generated, return nothing.
         """
 
         pass

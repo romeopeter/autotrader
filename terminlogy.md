@@ -1,14 +1,15 @@
 # Terminlogies
 
 Trading and and data analytic terminlogy that I came across when developing this program.
-<hr>
 
-<!-- Data analytic terms -->
+...
+
+## Data Analytic
 - Dataframe: Two-dimentional grouping of data of any type. Can be compares to Excel sheet or SQL data tables
 
 - Window function: Window functions enable to perform calculations against partitions(subgroups or sections) of result, typically a table
 
-<!-- Trading terminlogy -->
+## Trading
 - Indicators: This are technial calculations on data that are used to predict and indicate trends and signals.
     + Leading Indictor: This predict future price movement
     + Lagging Indicators: Look past trends and indiciate momentum (next move)

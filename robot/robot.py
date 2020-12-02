@@ -27,6 +27,8 @@ class Robot:
         trading_account: str = None,
     ) -> None:
         """
+        Initialize instance of robot and logs into stock API platform
+
         Paramenters
         -----------
         client-id: str
@@ -38,22 +40,12 @@ class Robot:
         trading_account: str, optional
             Trading account number
 
-        Attributes
-        ----------
-        session: object
-            API connection session
-        trades: dict
-            Key-value pair of trade orders
-        historical_prices: dict
-            key-value pair of prices
-        stock-frame: optional
-            Price data, and trade signal indicators
-
         Returns
         -------
         None
             Nothing is returned
         """
+
         self.client_id: str = client_id
         self.redirect_url: str = redirect_url
         self.credential_path: str = credential_path
@@ -64,13 +56,17 @@ class Robot:
 
     def _create_session(self) -> TDClient:
         """
-        Create session with stock API
+        Create session with API platform
+
+        Create a new session with TD Ameritrade API and log user into session
 
         Returns
         -------
         object
             TDClient object with authenticated session
         """
+
+        # Create a new instance instance of the client
         td_api_client = TDClient(
             client_id=self.client_id,
             redirect_url=self.redirect_url,
@@ -88,10 +84,24 @@ class Robot:
         """
         Check for US market activities before actual market hours
 
+        Use the datetime module to create US pre-market Equity hours in UTC time.
+
+        Usage:
+            >>> autotrader = Robot(
+            client_id=CLIENT_ID,
+            redirect_uri=REDIRECT_URI,
+            credentials_path=CREDENTIALS_PATH
+            )
+
+            >>> pre_market_open_flag = autotrader.pre_market_open
+            >>> pre_market_open_flag()
+            True
+
+
         Returns
         -------
         bool:
-            True if there's pre market, else false
+            True if there's pre-market, else false
         """
         pre_market_time = (
             datetime.now()
@@ -113,6 +123,19 @@ class Robot:
     def post_market_open(self) -> bool:
         """
         Check for US market activities after actual market hours
+
+        Use the datetime module to create US post-market Equity hours in UTC time.
+
+         Usage:
+            >>> autotrader = Robot(
+            client_id=CLIENT_ID,
+            redirect_uri=REDIRECT_URI,
+            credentials_path=CREDENTIALS_PATH
+            )
+
+            >>> post_market_open_flag = autotrader.pre_market_open
+            >>> post_market_open_flag()
+            True
 
         Returns
         -------
@@ -136,9 +159,23 @@ class Robot:
         return False
 
     @property
-    def regular_market(self) -> bool:
+    def regular_market_open(self) -> bool:
         """
-        Check for US stock market activities
+        Check for US stock market activities.
+
+        Uses the datetime module to create US Regular Market Equity hours in
+        UTC time.
+
+         Usage:
+            >>> autotrader = Robot(
+            client_id=CLIENT_ID,
+            redirect_uri=REDIRECT_URI,
+            credentials_path=CREDENTIALS_PATH
+            )
+
+            >>> regular_market_open_flag = autotrader.pre_market_open
+            >>> regular_market_open_flag()
+            True
 
         Returns
         -------
@@ -161,9 +198,23 @@ class Robot:
             return True
         return False
 
-    def portfolio(self):
+    def create_portfolio(self) -> Portfolio:
         """
-        Portfolio object store recognize and store positions
+        Creates new portfolio
+
+        Creates a Portfolio Object to help store and organize positions
+        as they are added and removed during trading.
+
+        Usage:
+        ----
+            >>> autotrader = Robot(
+            client_id=CLIENT_ID,
+            redirect_uri=REDIRECT_URI,
+            credentials_path=CREDENTIALS_PATH
+            )
+            >>> portfolio = autotrader.create_portfolio()
+            >>> portfolio
+            autotrader.portfolio.Portfolio object at 0x0392BF88>
 
         Returns
         -------
@@ -173,12 +224,12 @@ class Robot:
         """
         pass
 
-    def trade(self):
+    def create_trade(self) -> Trade:
         """
-        Builds order with with pre-build templates that can be easily modified to include complex strategies.
+        Initialize a new instance of a Trade Object
 
-        Calls TD Ameritrade Quotes endpoint to get all
-        the positions in the portfolio. returns single dicitionary for one position, else a nested dictionary.
+        Simplifies the process of building an order with with pre-built templates that can be easily modified to include complex strategies.
+
 
         Returns
         -------

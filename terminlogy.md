@@ -2,7 +2,7 @@
 
 Trading and and data analytic terminlogy that I came across when developing this program.
 
-...
+---
 
 ## Data Analytic
 - Dataframe: Two-dimentional grouping of data of any type. Can be compares to Excel sheet or SQL data tables
@@ -17,3 +17,5 @@ Trading and and data analytic terminlogy that I came across when developing this
 - Signals: This are specific recommendation on financial assets to be executed at a predetermined time and price
 
 - Relative Strength Index (RSI): This is momentum indicator used in technical analysis that measures the magnitude (speed) and change of price movement to evaluate overbought or oversold conditions in the price of a stock or other asset.
+
+- Technical Analysis of Stocks and Trends: Technical analysis of stocks and trends is the study of historical market data, including price and volume, to predict future market behavior.

@@ -10,18 +10,16 @@ from pandas.core.window import RollingGroupby
 
 
 class StockFrame:
-    """
-   StockFrame object for manipulating and parsing stock data
-    """
+    """StockFrame object stores all price data, adds indicator and handles the appending, organizing and deleting of data"""
 
     def __init__(self, data: List[dict]) -> None:
         """
-        Initializes the stock data frame object
+        Initializes the StockFrame object.
 
         Parameter
         ---------
-        List: List[dict]
-            Data to convert to frame, normally this is from the historic price endpoint
+        data: List[dict]
+            Data to convert to frame, normally this is from the historic price endpoint.
         """
 
         self._data = data
@@ -36,15 +34,15 @@ class StockFrame:
 
         Returns
         -------
-        DataFame
-            Pandas data frame with price data
+        pd.DataFrame
+           A Pandas data frame with price data.
         """
         return self._frame
 
     @property
     def symbol_group(self) -> DataFrameGroupBy:
         """
-        Returns symbol groups in the StockFrame.
+        Returns groups in the StockFrame.
 
         Overview
         --------

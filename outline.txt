@@ -1,29 +1,31 @@
 STOCK TRADING SOFTWARE
 <!--
-    Trading is not easy. You have to have a solid background (Order types, indicators, account activity -- and other related things) in order to trade effectively.
+    Trading is not easy. You have to have a solid background (forex, stocks, quotes, indicators, signals account activity -- and other related things) in order to trade effectively.
 
     Trading is complex, and it's even more complex building a software for it.
 
-    I dont' have solid trading background. I'm learning while building this software.
+    I dont' have trading background. I'm learning while building this software.
 
-    This should be interesting, fun and frustrating at the same time!
+    This should be fun, interesting and frustrating at the same time!
 
     "We move!"
 -->
--------------------------------
+------------------------------------------------------------------------
 SOFTWARE OBJECTIVES
--------------------------------
+Develop program that'll be able to do the following.
+-------------------------------------------------------------------------
 - Stream real-time QUOTES: get realtime stock price information
 
-- place ENTER & EXIT POSITIONS(Buy & Sell): Buy signal and sell signal, may create a new order
+- place ENTER & EXIT POSITIONS(Buy & Sell): Buy and sell instrument, may create a new order
 
 - Manage account data (ORDERS, POSITIONS & ACTIVITY): prevent entering same positions and manage decision making. Account data is critical
 
 - Calculate different TECHNICAL INDICATORS: Determines enter & exit positions, knows market conditions using technical patterns. Set up mechanism for calculating indicators
 
 ------------------------------
-BREAKING DOWN THE SOLUTION
+SOLUTION BREAKDOWN
 ------------------------------
+
 _In terms of OOP programming_
 
 - Robot: 
@@ -38,7 +40,7 @@ _In terms of OOP programming_
     
 - Portfolio (Mimicks account activities):
     + Represents trading portfolio of MULTIPLE POSITIONS
-    + Calculates common portfolio metrics ans used to answer general questions on trade positions
+    + Calculates common portfolio metrics used to answer general questions on trade positions
 
 - Trade:
     + A trade which REPRESENT AN ORDER to be placed
@@ -47,3 +49,5 @@ _In terms of OOP programming_
 - INDICATORS:
     + Technial indicators to be used during training trade signal indicator
     + SPECIFIES BUY/SELL CRITERIA, and any METHODLODY used for calculations
+
+

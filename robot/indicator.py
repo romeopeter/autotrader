@@ -166,6 +166,19 @@ class Indicator:
         Returns
         -------
         pd.DataFrame -- A Pandas dataframe with RSI indicator included
+
+        Usage
+        -----
+        >>> historical_price_df = robot.grab_historical_price(
+            start=start_date,
+            end=end_date,
+            bar_size=1,
+            bar_type='minute'
+        )
+        >>> price_date_frame = pd.DataFrame(data=historical_price_df)
+        >>> indicator_client = Indicator(price_data_frame=price_data_frame)
+        >>> indicator_client.relative_strength_index(period=14)
+        >>> price_data_frame = indicator_client.price_data_frame
         """
 
         locals_data = locals
@@ -220,6 +233,48 @@ class Indicator:
 
         return self._frame
 
+    def simple_moving_average(self, period: int) -> pd.DataFrame:
+        """
+        Calculates the simple moving average (SMA)
 
-# NEXT: Adding indicators
+        Parameter
+        --------
+        Period: int
+            The number of period to use calculating SMA
+
+        Returns
+        ------
+        pd.DataFrame -- a Panda data frame with the SMA indicator included
+
+        Usage
+        ----
+        >>> historical_price_df = robot.grab_histoical_prices(
+                start=start_date,
+                end=end_date,
+                bar_size=1,
+                bar_type='minute'
+        )
+        >>> price_data_frame = pb.DataFrame(data=historical_price_df)
+        >>> indicator_client = Indicator(price_data_frame=price_data_frame)
+        >>> indicator_client.simple_moving_average(period=100)
+        >>> price_data_frame = indicator_client.price_data_frame
+        """
+
+        locals_data = locals()
+        del locals_data["self"]
+
+        column_name = "sma"
+        self._current_indicators[column_name] = {}
+        self._current_indicators[column_name]["args"] = locals_data
+        self._current_indicators[column_name]["func"] = self.simple_moving_average()
+
+        # Add the SMA
+        self._frame[column_name] = self._price_groups.transform(
+            lambda x: x.rolling(window=period).mean()
+        )
+
+        return self._frame
+
+
+# NEXT: Add another rsi method
 # Video 6

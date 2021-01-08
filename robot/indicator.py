@@ -125,6 +125,101 @@ class Indicator:
 
         self._frame = price_data_frame
 
+    def change_in_price(self) -> pd.DataFrame:
+        """
+        Calculates the change in price
+
+        Returns
+        ------
+        pd.DataFrame -- A pandas DataFrame with the change in price included
+        """
+
+        locals_data = locals()
+        del locals_data["self"]
+
+        column_name = "change_in_price"
+        self._current_indicators[column_name] = {}
+        self._current_indicators[column_name]["args"] = locals_data
+        self._current_indicators[column_name]["func"] = self.change_in_price
+
+        # Calculate change in price
+        self._frame[column_name] = self._price_groups["closing"].transform(
+            lambda x: x.diff()
+        )
+
+        return self._frame
+
+    def relative_strength_index(
+        self, period: int, method: str = "wilders"
+    ) -> pd.DataFrame:
+        """
+        Calculate the relative strength index (RSI)
+
+        Parameters
+        ----------
+        period: int
+            Number of periods used to calculate RSI
+
+        method: str
+            The calculation methodolgy (default: 'wilders')
+
+        Returns
+        -------
+        pd.DataFrame -- A Pandas dataframe with RSI indicator included
+        """
+
+        locals_data = locals
+        del locals_data["self"]
+
+        column_name = "rsi"
+        self._current_indicators[column_name] = {}
+        self._current_indicators[column_name]["args"] = locals_data
+        self._current_indicators[column_name]["func"] = self.relative_strength_index
+
+        # Calculate the change in price
+        if "change_in_price" not in self._frame:
+            self.change_in_price()
+
+        # Define the up days
+        self._frame["up_day"] = self._price_groups["change_in_price"].tranform(
+            lambda x: np.where(x >= 0, x, 0)
+        )
+
+        # Define the down days
+        self._frame["down_day"] = self._price_groups["change_in_price"].tranform(
+            lambda x: np.where(x < 0, x.abs(), 0)
+        )
+
+        # Calculate the EWMA for the Up days.
+        self._frame["ewma_up"] = self._price_groups["up_day"].transform(
+            lambda x: x.ewma(span=period).mean()
+        )
+
+        # Calculate the EWMA for the Down days.
+        self._frame["ewma_down"] = self._price_groups["down_day"].transform(
+            lambda x: x.ewma(span=period).mean()
+        )
+
+        # Calculate the relative stregnth
+        relative_strength = self._frame["ewma_up"] / self._frame["ewma_down"]
+
+        # Calculate the relative stregnth index
+        relative_strength_index = 100.0 - ((100 / 1) + relative_strength)
+
+        # Add RSI indicator to dataframe
+        self._frame["rsi"] = np.where(
+            relative_strength_index == 0, 100, relative_strength_index
+        )
+
+        # Clean up before returning data
+        self._iframe.drop(
+            label=["ewma_up", "ewma_down", "down_day", "up_day", "change_in_price"],
+            axis=1,
+            inplace=True,
+        )
+
+        return self._frame
+
 
 # NEXT: Adding indicators
 # Video 6

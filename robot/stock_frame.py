@@ -40,7 +40,7 @@ class StockFrame:
         return self._frame
 
     @property
-    def symbol_group(self) -> DataFrameGroupBy:
+    def symbol_groups(self) -> DataFrameGroupBy:
         """
         Returns groups in the StockFrame.
 

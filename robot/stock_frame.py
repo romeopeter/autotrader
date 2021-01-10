@@ -220,12 +220,11 @@ class StockFrame:
         bool
             True if all columns exist, otherwise false
 
-
         """
 
         pass
 
-    def _check_signal(self, indicators: dict) -> Union[pd.Series, None]:
+    def _check_signals(self, indicators: dict) -> Union[pd.Series, None]:
         """
         Returns the last row of StockFrame if conditions are met.
 

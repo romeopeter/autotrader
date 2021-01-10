@@ -240,7 +240,7 @@ class Indicator:
         Parameter
         --------
         Period: int
-            The number of period to use calculating SMA
+            The number of period to use in calculating SMA
 
         Returns
         ------
@@ -274,6 +274,82 @@ class Indicator:
         )
 
         return self._frame
+
+    def exponential_moving_average(
+        self, period: int, alpha: float = 0.0
+    ) -> pd.DataFrame:
+        """
+        Calculate the Exponential Moving Average (EMA).
+
+        Parameters
+        ----------
+        period: int
+            The number of period to use in calculating EMA
+
+        alpha: float
+            The alpha weight used in calculation. default is '0.0'
+
+        Returns
+        -------
+        pd.DataFrame -- A Pandas data frame with ema indicator included
+
+        Usage
+        -----
+        >>> historical_prices_df = trading_robot.grab_historical_prices(
+                start=start_date,
+                end=end_date,
+                bar_size=1,
+                bar_type='minute'
+            )
+        >>> price_data_frame = pd.DataFrame(data=historical_price_df)
+        >>> indicator_client = Indicator(price_data_frame=price_data_frame)
+        >>> indicator_client.exponential_moving_average(period=50, alpha=1/50)
+        """
+
+        locals_data = locals()
+        del locals_data["self"]
+
+        column_name = "ema"
+        self._current_indicators[column_name] = {}
+        self._current_indicators[column_name]["args"] = locals_data
+        self._current_indicators[column_name][
+            "func"
+        ] = self.exponential_moving_average()
+
+        # Add the EMA
+        self._frame[column_name] = self._price_groups["closing"].transform(
+            lambda x: x.ewa(span=period).mean()
+        )
+
+        return self._frame
+
+    def refresh(self):
+        """
+        Update Indicator column after adding new roles
+        """
+
+        # Update the groups
+        self.price_groups = self._stock_frame.symbol_groups
+
+        # Loop and grab indicator details
+        for indicator in self._current_indicators:
+            # Grab stored indicator function
+            indicator_arguments = self._current_indicators.indicator["args"]
+
+            # Grab stored indicator arguments
+            indicator_function = self._current_indicators.indicator["func"]
+
+            # Run stored indicator function to update column
+            indicator_function(**indicator_arguments)
+
+    def check_singals(self) -> Union[pd.DataFrame, None]:
+        signal_df = self._stock_frame._check_singals(
+            indicators=self._indicator_signals,
+            indciators_comp_key=self._indicators_comp_key,
+            indicators_key=self._indicators_key,
+        )
+
+        return signal_df
 
 
 # NEXT: Add another rsi method

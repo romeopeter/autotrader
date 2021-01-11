@@ -30,7 +30,7 @@ class StockFrame:
     @property
     def frame(self) -> pd.DataFrame:
         """
-        Frame object
+        The frame object
 
         Returns
         -------
@@ -62,7 +62,7 @@ class StockFrame:
 
     def symbol_rolling_groups(self, size: int) -> RollingGroupby:
         """
-        Grab the windows for each group
+        Grab the windows for each symbol group
 
         Parameter
         ---------
@@ -107,13 +107,14 @@ class StockFrame:
         Parameters
         ----------
         price_df: pd.DataFrame
-            Price Dataframe containting the price column
+            Price Dataframe with datatime column.
 
         Returns
         -------
         pd.DataFrame
             A pandad DataFrame object
         """
+
         price_df["datetime"] = pd.to_datetime(
             price_df["datetime"], unit="ms", origin="unix"
         )
@@ -139,14 +140,14 @@ class StockFrame:
 
         return price_df
 
-    def add_rows(self, data: dict) -> None:
+    def add_rows(self, data: List[dict]) -> None:
         """
         Adds a new row to StockFrame
 
         Parameters
         ----------
         data: dict
-            A stock quote
+            List of stock quote
 
         Return
         ------
@@ -170,23 +171,23 @@ class StockFrame:
 
         column_names = ["open", "close", "high", "low", "volume"]
 
-        for symbol in data:
+        for quote in data:
 
             # Parse the time stamp
             time_stamp = pd.to_datetime(
-                data[symbol]["quoteTimeInLong"], unit="ms", origin="unix"
+                data[quote]["datetime"], unit="ms", origin="unix"
             )
 
             # Define the index Tuple
-            row_id = (symbol, time_stamp)
+            row_id = (quote, time_stamp)
 
             # Define the StockFrame values
             new_values = [
-                data[symbol]["openPrice"],
-                data[symbol]["closePrice"],
-                data[symbol]["highPrice"],
-                data[symbol]["lowPrice"],
-                data[symbol]["askPrice"] + data[symbol]["bidPrice"],
+                data[quote]["open"],
+                data[quote]["close"],
+                data[quote]["high"],
+                data[quote]["low"],
+                data[quote]["volume"],
             ]
 
             # Create the new row
@@ -204,7 +205,7 @@ class StockFrame:
 
         Overview
         --------
-        The user can append multiple indicator column to the StockFrame object. In some cases, columns need to be modify before making trades. This method helps to check those columns exists before modifying.
+        The user can append multiple indicator column to the StockFrame object. In some cases, columns need to be modified (modified via indicators) before making trades. This method helps to check those columns exists before modifying.
 
         Parameter
         ---------

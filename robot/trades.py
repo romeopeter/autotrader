@@ -49,9 +49,58 @@ class Trades:
         enter_exit: str
             Specifies whether trade will enter a new position, or exit an existing position. If ENTER then specify 'enter', if EXIT then specify 'exit'
 
-        Price: float
+        price: float
             Specifies the price for a trade
 
         stop_limit_price: float
             Specifies the limit price to stop a trade
+
+        Returns
+        -------
+        {dict} -- [A dictionary representing new trade]
         """
+
+        self.trade_id = trade_id
+
+        self.order_types = {
+            "mkt": "MARKET",
+            "lmt": "LIMIT",
+            "stop": "STOP",
+            "stop_lmt": "STOP_LIMIT",
+            "trailing_stop": "TRAILING_STOP",
+        }
+
+        self.order_instructions = {
+            "enter": {"long": "BUY", "short": "SELL_SHORT"},
+            "exit": {"long": "SELL", "short": "SELL_TO_COVER"},
+        }
+
+        self.order = {
+            "orderStrategyType": "SINGLE",
+            "orderType": self.order_types[order_type],
+            "session": "NORMAL",
+            "duration": "DAY",
+            "orderLegCollection": [
+                {
+                    "instructions": self.order_instructions[enter_exit][side],
+                    "quantity": 0,
+                    "instrument": {"symbol": None, "assetType": None},
+                }
+            ],
+        }
+
+        if self.order["orderType"] == "STOP":
+            self.order["stopPrice"] = price
+
+        elif self.order["orderType"] == "LIMIT":
+            self.order["price"] = price
+
+        elif self.order["orderType"] == "STOP_LIMIT":
+            self.order["price"] = stop_limit_price
+            self.order["stopPrice"] = price
+
+        elif self.order["orderType"] == "TRAILING_STOP":
+            self.order["stopPriceLinkBasis"] = ""
+            self.order["stopPriceLinkType"] = ""
+            self.order["stopPriceOffset"] = 0.00
+            self.order["stopType"] = "STANDARD"

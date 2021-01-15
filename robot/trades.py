@@ -19,7 +19,7 @@ class Trades:
 
         self.order_response = ""
         self.trigger_added = False
-        self.mult_leg = False
+        self.multi_leg = False
 
     def new_trade(
         self,
@@ -131,3 +131,45 @@ class Trades:
             self.side_opposite = "long"
 
         return self.order
+
+    def instrument(
+        self,
+        symbol: str,
+        quantity: int,
+        asset_type: str,
+        sub_asset_type: str = None,
+        order_leg_id: int = 0,
+    ) -> dict:
+        leg = self.order["orderLegCollection"][order_leg_id]
+
+        leg["instrument"]["symbol"] = symbol
+        leg["instrument"]["assetType"] = asset_type
+        leg["quantity"] = quantity
+
+        self.order_size = quantity
+        self.symbol = symbol
+        self.asset_type = asset_type
+
+        return leg
+
+    def good_till_cancel(self, cancel_time: datetime) -> None:
+        self.order["duration"] = "GOOD_TILL_CANCEL"
+        self.order["cancelTime"] = cancel_time.isoformat()
+
+    def modify(self, side: Optional[str], order_leg_id: int = 0) -> None:
+        if side and side not in [
+            "buy",
+            "sell",
+            "sell_short",
+            "buy_to_cover",
+            "sell_to_close",
+            "buy_to_open",
+        ]:
+            raise ValueError("Specified side is not valid. Please chose a valid side")
+
+        if side:
+            self.order["orderLegCollection"]["instructions"] = side.upper()
+        else:
+            self.order["orderLegCollection"]["instructions"] = self.order_instructions[
+                self.enter_exit
+            ][self.side_opposite]

@@ -29,9 +29,9 @@ class Trades:
         enter_exit: str,
         price: float,
         stop_limit_price: float,
-    ) -> Dict:
+    ) -> dict:
         """
-        Create new trade object template
+        Create new trade object template.
 
         A trade object is a template that can be used to help build complex trades that normally are prone to errors when writing the JSON. Additionally, it will help the process of storing trades easier.
 
@@ -91,16 +91,43 @@ class Trades:
 
         if self.order["orderType"] == "STOP":
             self.order["stopPrice"] = price
-
         elif self.order["orderType"] == "LIMIT":
             self.order["price"] = price
-
         elif self.order["orderType"] == "STOP_LIMIT":
             self.order["price"] = stop_limit_price
             self.order["stopPrice"] = price
-
         elif self.order["orderType"] == "TRAILING_STOP":
             self.order["stopPriceLinkBasis"] = ""
             self.order["stopPriceLinkType"] = ""
             self.order["stopPriceOffset"] = 0.00
             self.order["stopType"] = "STANDARD"
+
+        # Capture parameters passed in.
+        # Useful when adding other components
+        self.enter_exit = enter_exit
+        self.side = side
+        self.order_type = order_type
+        self.price = price
+
+        """Store parameter value for later use if conditions are met"""
+        if order_type == "stop":
+            self.stop_price = price
+        elif order_type == "stop_lmt":
+            self.stop_limit_price = stop_limit_price
+        else:
+            self.stop_price = 0.00
+            self.stop_limit_price = 0.00
+
+        # Set enter or exit
+        if enter_exit == "enter":
+            self.enter_exit = enter_exit
+        elif enter_exit == "exit":
+            self.enter_exit = enter_exit
+
+        # Set sides
+        if side == "long":
+            self.side_opposite = "short"
+        elif side == "short":
+            self.side_opposite = "long"
+
+        return self.order

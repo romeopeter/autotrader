@@ -140,6 +140,30 @@ class Trades:
         sub_asset_type: str = None,
         order_leg_id: int = 0,
     ) -> dict:
+        """
+        Adds instrument to a trade.
+
+        Parameter
+        ---------
+        symbol: str
+            The instrument ticker symbol.
+
+        quantity: int
+            The quantity of shares to be purchased.
+
+        asset_type: str
+            The instrument asset type. For example, `EQUITY`.
+
+        Keyword Parammeter
+        ------------------
+        sub_asset_type: int
+            The instrument sub-asset type. Not always needed
+
+        Returns
+        --------
+        dict -- A dictionary with the instrument
+        """
+
         leg = self.order["orderLegCollection"][order_leg_id]
 
         leg["instrument"]["symbol"] = symbol
@@ -153,10 +177,41 @@ class Trades:
         return leg
 
     def good_till_cancel(self, cancel_time: datetime) -> None:
+        """
+        Converts an order to a 'Good Till Cancel' order.
+
+        Parameters
+        ----------
+        cancel_time: datetime.datetime
+            A datetime object representing the cancel time of the order
+
+        Returns
+        ------
+        None -- Returns nothing
+        """
+
         self.order["duration"] = "GOOD_TILL_CANCEL"
         self.order["cancelTime"] = cancel_time.isoformat()
 
-    def modify(self, side: Optional[str], order_leg_id: int = 0) -> None:
+    def modify_sides(self, side: Optional[str], order_leg_id: int = 0) -> None:
+        """
+        Modify the sides of the order
+
+        Parameters
+        ----------
+        side:
+        The side to set. Can be any of the following: ['buy', 'sell', 'sell_short', 'buy_to_cover']
+
+        Keyword parameters
+        -----------------
+        order_leg_int: int
+            The leg to be adjusted. Default is 0
+
+        Raise
+        -----
+        ValueError -- If 'side' is not valid then raise a ValueError
+        """
+
         if side and side not in [
             "buy",
             "sell",

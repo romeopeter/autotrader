@@ -1,17 +1,17 @@
 # Autotrader Bot
 
-<!--
-    Trading is not easy. I have haven no solid background trading (forex, stocks, and equity) and its related terms and gimmicks (quotes, indicators, signals account activity) in order to trade effectively.
 
-    Trading is complex, and it's even more complex building a software for it.
-
-    I'm learning while building this software.
-
-    This should be fun, interesting and frustrating all at the same time!
-
-    "We move!"
--->
-------------------------------------------------------------------------
+>   Trading is not easy. I have haven no solid background trading (forex, stocks, and equity) and its related terms and gimmicks (quotes, indicators, signals account activity) in order to trade effectively.
+>   
+>    Trading is complex, and it's even more complex building a software for it.
+>
+>    I'm learning while building this software.
+>
+>    This should be fun, interesting and frustrating all at the same time!
+>
+>    "We move!"
+>-->
+>------------------------------------------------------------------------
 
 ## SOFTWARE OBJECTIVES
 

@@ -16,7 +16,7 @@
 ## SOFTWARE OBJECTIVES
 
 _program should be able to do the following:_
--------------------------------------------------------------------------
+
 - Stream real-time QUOTES: get realtime stock price information
 
 - place ENTER & EXIT POSITIONS(Buy & Sell): Buy and sell instrument, may create a new order
@@ -27,8 +27,7 @@ _program should be able to do the following:_
 
 ## SOLUTION BREAKDOWN
 
-_In terms of OOP programming_
-------------------------------
+_In terms of OOP programming:_
 
 - Robot: 
     + Handles the interaction with stock API.

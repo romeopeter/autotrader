@@ -228,3 +228,23 @@ class Trades:
             self.order["orderLegCollection"]["instructions"] = self.order_instructions[
                 self.enter_exit
             ][self.side_opposite]
+
+    def add_box_rage(
+        self, profit_size: float, percentage: bool = False, stop_limit: bool = False
+    ):
+        """
+        Adds a Stop Loss(or Stop_Limit) order, add a limit order.
+
+        Parameter
+        ---------
+        profit_size: float
+            The size of desired profit. For example, '0.10'
+
+        percentage: bool
+            Specified whether profit should be in absolute currency form (currency is in dollar and it's set to false) or in percentage(true).
+        """
+
+        if not self.trigger_added:
+            self.convert_to_trigger()
+
+        self.add_take_profit(profit_size=profit_size, percentage=percentage)

@@ -248,3 +248,61 @@ class Trades:
             self.convert_to_trigger()
 
         self.add_take_profit(profit_size=profit_size, percentage=percentage)
+
+    def add_stop_loss(self, stop_size: float, percentage: bool) -> bool:
+        """
+        Add's a stop loss order to exit the position when a certain loss is reached.
+
+        Parameters
+        ----------
+        stop_size: float:
+            The size of the stop from the current trading price. For example, '0.10'
+
+        Returns
+        ------
+        bool -- Returns 'True' after order has been added.
+        """
+
+        if not self.trigger_added:
+            self.trigger_added()
+
+        if self.order_type == "mkt":
+            price = self.price
+        elif self.order_type == "lmt":
+            price = self.price
+
+        if percentage:
+            adjustment = 1.0 - stop_size
+            new_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+        else:
+            adjustment = -stop_size
+            new_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+
+        stop_loss_order = {
+            "orderType": "STOP",
+            "session": "NORMAL",
+            "duration": "DAY",
+            "stopPrice": new_price,
+            "orderStrategyType": "SINGLE",
+            "orderLegCollection": [
+                {
+                    "instruction": self.order_instructions[self.enter_exit_opposite][
+                        self.side
+                    ],
+                    "quantity": self.order_size,
+                    "instructions": {
+                        "symbol": self.symbol,
+                        "assetType": self.asset_type,
+                    },
+                }
+            ],
+        }
+
+        self.stop_loss_order = stop_loss_order
+        self.order["childOrderStrategies"].append(self.stop_loss_order)
+
+        return True

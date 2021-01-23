@@ -306,3 +306,95 @@ class Trades:
         self.order["childOrderStrategies"].append(self.stop_loss_order)
 
         return True
+
+    def add_stop_limit(
+        self,
+        stop_size: float,
+        limit_size: float,
+        stop_percentage: bool = False,
+        limit_percentage: bool = False,
+    ) -> bool:
+
+        """
+        Add's a Stop Limit Order to exit a trade when a stop price is reached but does not exceed the limit.
+
+        Parameters
+        ---------
+        stop_size: float
+            The size of the stop from the current trading price. For example, '0.10'
+
+        limit_size: float
+            The size of the limit from the current stop price. For example, '0.10'
+
+        Keyword parameters
+        -----------------
+        stop_percentage: bool
+            Specified whether 'stop_size' adjustment should be in absolute currency form (currency is in dollar and it's set to false) or in percentage(true). If 'True' will calculate the stop size as a percentage of the current price.
+
+        limit_percentage: bool
+            Specified whether 'limit_size' adjustment should be in absolute currency form (currency is in dollar and it's set to false) or in percentage(true). If 'True' will calculate the stop size as a percentage of the current price.
+
+        Returns
+        -------
+        bool -- Returns 'True' afer order is addded
+        """
+
+        # Check for an order trigger
+        if not self.trigger_added:
+            self.convert_t0_trigger()
+
+        # Grab the price
+        if self.order_type == "mkt":
+            price = self.price
+        elif self.order_type == "lmt":
+            price = self.price
+
+        # Calculate the Stop Price in
+        if stop_percentage:
+            adjustment = 1.0 - stop_size
+            stop_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+        else:
+            adjustment = -stop_size
+            stop_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+
+        # Calculate the Limit price
+        if limit_percentage:
+            adjustment = 1.0 - limit_size
+            limit_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+
+        # Add the order
+        stop_limit_order = {
+            "orderType": "STOP_LIMIT",
+            "session": "NORMAL",
+            "duration": "DAY",
+            "price": limit_price,
+            "stopPrice": stop_price,
+            "orderStrategyType": "SINGLE",
+            "orderLegCollection": [
+                {
+                    "instuction": self.order_instructions[self.enter_exit_opposite][
+                        self.side
+                    ],
+                    "quantity": self.order_size,
+                    "instrument": {
+                        "symbol": self.symbol,
+                        "asset_type": self.asset_type,
+                    },
+                }
+            ],
+        }
+
+        self.stop_limit_order = stop_limit_order
+        self.order["childOrderStrategies"].append(stop_limit_order)
+
+        return True
+
+
+# NEXT: video 9 00:16:30
+# Building trading object (building, submitting and modify orders)

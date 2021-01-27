@@ -395,6 +395,37 @@ class Trades:
 
         return True
 
+    def _calculate_new_price(
+        self, price: float, percentage: float, adjustment: float
+    ) -> float:
+        """
+        Calculates adjusted price when given an old price.
 
-# NEXT: video 9 00:16:30
-# Building trading object (building, submitting and modify orders)
+        Parameter
+        ---------
+        price: float
+            Original price
+
+        percentage: float
+            Specified whether adjusted price should be in absolute currency form (currency will be in dollar and it's set to false) or in percentage(true).
+
+        adjustment: float
+            The adjustment to be made to price
+
+        Returns
+        -------
+        float --- The new price after adjustment
+        """
+
+        # Order below $1.00 should have four dp, else two dp
+        if percentage:
+            new_price = adjustment * percentage
+        else:
+            new_price = adjustment + percentage
+
+        if new_price < 1:
+            round(new_price, 4)
+        else:
+            round(new_price, 2)
+
+        return new_price

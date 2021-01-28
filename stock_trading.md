@@ -12,6 +12,15 @@ Trading and and data analytic terminlogies that I came across when developing th
 ## Trading
 - Leg: This is a single position taken in trading. There can be multi-leg in option trading for long call, short call; short put and long put.
 
+- Orders
+    + Market Order: This is an order to buy and sell security immediately.
+    + Limit Order: This is an order to buy and sell at a specific price. eg: submit limit order to buy ABC stock for no more $10.
+    + Stop Order or Stop Loss Order: An order to buy or sell a stock once the price of stock reaches specific price. When the stop price is reached, a stop order becomes a market order.
+    + Buy Stop Order: Order is entered at the Stop Price above the current market price.
+    + Sell Stop Order: Order is entered at the Stop Price below the current market price.
+
+- Stock Purchase & Sales
+
 ## Indicators
 - Technial calculations on data that are used to predict and indicate trends and signals.
     + Leading Indictor: This predict future price movement
@@ -24,9 +33,10 @@ Trading and and data analytic terminlogies that I came across when developing th
 - Technical Analysis of Stocks and Trends: Technical analysis of stocks and trends is the study of historical market data, including price and volume, to predict future market behavior.
 
 ## Portfolio
-
-
 --------------------------
+
+
+
 ## HOW TO TRADE STOCKS
 --------------------------
 - Don’t risk more than 2% of your account balance on a single trade

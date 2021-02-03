@@ -233,7 +233,8 @@ class Trades:
         self, profit_size: float, percentage: bool = False, stop_limit: bool = False
     ):
         """
-        Adds a Stop Loss(or Stop_Limit) order, add a limit order.
+        Specify when to take profit(Limit Order) and when to buy or sell (Stop Loss) instrument when it reaches a spefic price.
+        Adds a Stop Loss(or Stop_Limit) order, add a Limit Order.
 
         Parameter
         ---------
@@ -241,13 +242,18 @@ class Trades:
             The size of desired profit. For example, '0.10'
 
         percentage: bool
-            Specified whether profit should be in absolute currency form (currency is in dollar and it's set to false) or in percentage(true).
+            Specify whether profit should be in absolute currency form (currency is in dollar and it's set to false) or in percentage(true).
         """
 
         if not self.trigger_added:
             self.convert_to_trigger()
 
+        # Add take profit Limit Order
         self.add_take_profit(profit_size=profit_size, percentage=percentage)
+
+        # Add Stop Loss Order
+        if not stop_limit:
+            self.add_stop_loss(stop_size=profit_size, percentage=percentage)
 
     def add_stop_loss(self, stop_size: float, percentage: bool) -> bool:
         """
@@ -417,15 +423,144 @@ class Trades:
         float --- The new price after adjustment
         """
 
-        # Order below $1.00 should have four dp, else two dp
         if percentage:
-            new_price = adjustment * percentage
+            new_price = price * adjustment
         else:
-            new_price = adjustment + percentage
+            new_price = price + adjustment
 
+        # Order below $1.00 should have four dp in float, else two dp in float
         if new_price < 1:
             round(new_price, 4)
         else:
             round(new_price, 2)
 
         return new_price
+
+    def add_take_profit(self, profit_size: float, percentage: bool = False) -> bool:
+        """
+        Exits a trade when a profit threshold is reached. For example 0.10
+
+        Parameter
+        --------
+        profit_size: float
+            The size of profit to make
+
+        percentage: bool
+            Specify whether profit should be in absolute currency(dollar) form (default -- False), else in percentage(default -- True).
+        """
+
+        # Check for trigger order
+        if not self.trigger_added:
+            self.convert_to_trigger()
+
+        # Basis to calculate profit off of -- the price
+        if self.order_types == "mkt":
+            price = self.price
+        elif self.order_types == "lmt":
+            price = self.price
+
+        if percentage:
+            adjustment = 1.0 + profit_size
+            new_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=True
+            )
+        else:
+            adjustment = profit_size
+            new_price = self._calculate_new_price(
+                price=price, adjustment=adjustment, percentage=False
+            )
+
+        # Build the order
+        take_profit_order = {
+            "orderType": "LIMIT",
+            "session": "NORMAL",
+            "price": new_price,
+            "duration": "day",
+            "orderStrategyType": "SINGLE",
+            "orderLegCollection": [
+                {
+                    "instructions": self.order_instructions[self.enter_exit_opposite][
+                        self.side
+                    ],
+                    "quantity": self.order_size,
+                    "instrument": {"symbol": self.symbol, "assetType": self.asset_type},
+                }
+            ],
+        }
+
+        # Add order
+        self.take_profit_order = take_profit_order
+        self.order["childOrderStrategies"].apppend(self.take_profit_order)
+
+        return True
+
+    def _convert_to_trigger(self):
+        """
+        Convert a regular order to a trigger order
+
+        Overview
+        --------
+        Trigger orders can be used to have a stop loss order, take profit order right after the main order has been places. this help protect the order when possible and to take profit when tresholds are reached.
+        """
+
+        # Convert trigger order if it isn't one
+        if not self.order and self.trigger_added == False:
+            self.order["orderStrategyType"] = "TRIGGER"
+
+            # Initialize child strategsy for trigger order
+            self.order["childOrderStrategies"] = []
+
+            # Update trigger state
+            self.trigger_added = False
+
+    def modify_session(self, session: str) -> None:
+        """
+        Adjust order session
+
+        Description
+        -----------
+        Order activity depends on sessions.
+        To change order session to different one, then choose on of the following:
+
+        1. 'am' - Pre-market hours
+        2. 'pm' - Post-market hours
+        3. 'normal' - Normal market hours
+        4. 'seamless' - Order is active regardless of the session
+
+        Parameter
+        --------
+        sesion: str
+            Order session
+
+        Exception
+        ---------
+        valueError -- Raise valu error when wrong session is given
+        """
+
+        if session in ["am", "pm", "normal", "seamless"]:
+            self.order["session"] = session.upper()
+        else:
+            raise ValueError("Invalid session type")
+
+        @property
+        def order_response(self) -> dict:
+            """
+            Return order response after submitting an order.
+
+            Returns
+            dict -- Response order dictionary
+            """
+
+            return self._order_response
+
+        @order_response.setter
+        def order_response(self, order_response_dict: dict) -> None:
+            """
+            Sets order response after submitting an order.
+
+            Parameter
+            ---------
+            order_response_dict: dict
+                The order response dictionary
+            """
+            self._order_response = order_response_dict

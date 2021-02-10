@@ -542,25 +542,25 @@ class Trades:
         else:
             raise ValueError("Invalid session type")
 
-        @property
-        def order_response(self) -> dict:
-            """
-            Return order response after submitting an order.
+    @property
+    def order_response(self) -> dict:
+        """
+        Return order response after submitting an order.
 
-            Returns
-            dict -- Response order dictionary
-            """
+        Returns
+        dict -- Response order dictionary
+        """
 
-            return self._order_response
+        return self._order_response
 
-        @order_response.setter
-        def order_response(self, order_response_dict: dict) -> None:
-            """
-            Sets order response after submitting an order.
+    @order_response.setter
+    def order_response(self, order_response_dict: dict) -> None:
+        """
+        Sets order response after submitting an order.
 
-            Parameter
-            ---------
-            order_response_dict: dict
-                The order response dictionary
-            """
-            self._order_response = order_response_dict
+        Parameter
+        ---------
+        order_response_dict: dict
+            The order response dictionary
+        """
+        self._order_response = order_response_dict

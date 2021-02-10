@@ -564,3 +564,95 @@ class Trades:
             The order response dictionary
         """
         self._order_response = order_response_dict
+
+    def _generate_order_id(self) -> str:
+        """
+        Generate ID for identifying placed order
+
+        Returns
+        ------
+        str -- Returns either generated id as string or an emppty string
+        """
+
+        # Generate ID if theres an order
+        if self.order:
+            order_id = "{symbol}_{side}_{enter_exit}_{timestamp}"
+
+            order_id = order_id.format(
+                symbol=self.symbol,
+                side=self.side,
+                enter_exit=self.enter_exit,
+                timestamp=datetime.now().timestamp(),
+            )
+
+            return order_id
+
+        return ""
+
+    def add_leg(
+        self,
+        order_leg_id: int,
+        symbol: str,
+        quantity: int,
+        asset_type: str,
+        sub_asset_type: str = None,
+    ) -> List[Dict]:
+        """
+        Adds an intrument to a trade
+
+        Parameters
+        ----------
+        order_leg_id: int
+            ID to identify instrument
+
+        symbol: str
+            Instrument ticker symbol
+
+        quantity: int
+            Quantify of shares to buy or sell
+
+        asset_type: str
+            Insrument asset type. e.g: 'EQUITY'
+
+        sub_asset_type: str
+            Instrument sub asset type
+
+        Returns
+        -------
+        List[Dict] -- List of dictionary of the order order's leg collection
+        """
+
+        # Define leg
+        leg = {}
+        leg["instrument"]["symbol"] = symbol
+        leg["instrument"]["quantity"] = quantity
+        leg["instrument"]["assetType"] = asset_type
+
+        if sub_asset_type:
+            leg["instrument"]["subAssetType"] = sub_asset_type
+
+        if order_leg_id == 0:
+            self.instrument(
+                symbol=symbol,
+                quantity=quantity,
+                asset_type=asset_type,
+                sub_asset_type=sub_asset_type,
+                order_leg_id=order_leg_id,
+            )
+        else:
+            # Insert it
+            order_leg_collection = self.order["orderLegCollection"]
+            order_leg_collection.insert(order_leg_id, order_leg_collection)
+
+        return self.order["orderLegCollection"]
+
+    def number_of_legs(self) -> int:
+        """
+        Returns the number of legs int the order collection
+
+        Returns
+        -------
+        int -- nummber of legs in collection
+        """
+
+        return len(self.order["orderLegCollection"])

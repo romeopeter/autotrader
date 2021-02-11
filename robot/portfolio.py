@@ -6,22 +6,22 @@ class Portfolio:
     Portfolio object handles stock trading positions
     """
 
-    def __init__(self, account_number: str = None):
+    def __init__(self, account_number: str = None) -> None:
         """
-        Initialies new instance of the Portfolio object
+        Initializes a new instance of the Portfolio object
 
         Parameters
         ---------
         account_number: str, None
-            An account associated with portfolio. defaukt is set to nothing
+            An account number associated with portfolio. default is set to nothing
         """
 
         self.positions = {}
         self.positions_count = 0
 
-        self.market_value = 0.0
-        self.profit_loss = 0.0
-        self.risk_tolerance = 0.0
+        self.market_value = 0.00
+        self.profit_loss = 0.00
+        self.risk_tolerance = 0.00
         self.account_number = account_number
 
     def add_position(
@@ -33,7 +33,7 @@ class Portfolio:
         purchase_date: str = None,
     ) -> dict:
         """
-        Adds single position to Portfolio
+        Adds single new position to the Portfolio.
 
         Parameters
         ---------
@@ -88,7 +88,7 @@ class Portfolio:
 
     def add_positions(self, positions: List(dict)) -> dict:
         """
-        Add multiple positions to portfolio.
+        Add multiple positions to portfolio the portfolio at once.
 
         This method take an interable of values and pass each position
         to the 'add_position' method
@@ -123,7 +123,11 @@ class Portfolio:
             }
         ]
 
-        >>> new_positions = robot.portfolio.Portfolio.add_position(positions=multi_position)
+        Exception
+        ---------
+        TypeError -- Raises type error if position is not a list
+
+        >>> new_positions = robot.portfolio.Portfolio.add_positions(positions=multi_position)
         {
             'AAPL': {
             'asset_type': 'equity',
@@ -144,6 +148,8 @@ class Portfolio:
 
         if isinstance(positions, list):
             for position in positions:
+
+                # Add the position.
                 self.add_position(
                     symbol=position["symbol"],
                     asset_type=position["asset_type"],
@@ -157,14 +163,14 @@ class Portfolio:
 
     def remove_position(self, symbol: str) -> Tuple[bool, str]:
         """
-        Removes single position from portfolio
+        Removes a single position from the portfolio
 
         Paremeter
         --------
         symbol: str
             Symbol to identify position to be removed. e.g: 'TSLA' or 'AAPL'
 
-        Return
+        Returns
         ------
         Tuple: bool, str
             Returns True with messsage if deleted, otherwise False
@@ -195,7 +201,7 @@ class Portfolio:
 
     def in_position(self, symbol: str) -> bool:
         """
-        Checks if symbol is in portfolio
+        Checks if symbol is in the portfolio.
 
         Paremeter
         --------
@@ -205,7 +211,18 @@ class Portfolio:
         Return
         ------
         bool
-            True if position exist in the portfolio, False otherwise
+            'True' if position exist in the portfolio, 'False' otherwise
+
+        Usage:
+        ----
+            >>> portfolio = Portfolio()
+            >>> new_position = Portfolio.add_position(
+                symbol='MSFT',
+                asset_type='equity'
+            )
+            >>> in_position_flag = Portfolio.in_portfolio(symbol='MSFT')
+            >>> in_position_flag
+                True
         """
 
         if symbol in self.position:
@@ -213,20 +230,20 @@ class Portfolio:
         return False
 
     def is_profitable(self, symbol: str, current_price: float) -> bool:
-        """Checks whether a position is profitable
+        """Checks whether a position is profitable.
 
         Parameter
         ---------
         symbol: str
-            Symobol of the financial instrument used check profitability
+            Symbol of the financial instrument used to check profitability
 
         current_price: float
-            Current trading rice of financial instrument
+            Current trading price of financial instrument
 
         Return
         -----
         bool
-            Returns True if profitable, else false if flat
+            Returns 'True' if profitable, else 'False' if flat
         """
 
         if symbol in self.positions:
@@ -239,7 +256,7 @@ class Portfolio:
             return False
 
     def total_allocation(self):
-        """Returns a summary of portfolio by asset allocation"""
+        """Returns a summary of the portfolio by asset allocation"""
         pass
 
     def risk_exposure(self):

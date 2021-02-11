@@ -9,6 +9,10 @@ from datetime import datetime, timezone, time
 
 from typing import List, Dict, Union
 
+from robot import Trade
+from robot import Portfolio
+from robot import Stockframe
+
 
 # Timestamp conversion to milliseconds
 time_since_epoch = TDUtilities().milliseconds_since_epoch
@@ -16,7 +20,7 @@ time_since_epoch = TDUtilities().milliseconds_since_epoch
 
 class Robot:
     """
-    Robot class handldes interaction with stock API and makes related requests
+    Robot class handles interaction with stock API and makes related requests
     """
 
     def __init__(
@@ -31,14 +35,17 @@ class Robot:
 
         Paramenters
         -----------
-        client-id: str
-            External API consumer ID
+        client_id: str
+            API consumer ID assigned to application
+
         redirect_url: str
-            API fallback URL
+            API fallback URL associated with TDAmeritrade
+
         credential_path: str, optional
             Path to API client credential
+
         trading_account: str, optional
-            Trading account number
+            Trading account associated with TDAmeritrade account
 
         Returns
         -------
@@ -56,14 +63,13 @@ class Robot:
 
     def _create_session(self) -> TDClient:
         """
-        Create session with API platform
+        Start a new session
 
         Create a new session with TD Ameritrade API and log user into session
 
         Returns
         -------
-        object
-            TDClient object with authenticated session
+            TDClient{object} -- A TDClient object with authenticated sessions
         """
 
         # Create a new instance instance of the client
@@ -73,18 +79,17 @@ class Robot:
             credential_path=self.credential_path,
         )
 
-        # Start session
+        # Start session by loging in client
         td_api_client.login()
 
         return td_api_client
 
-    # NOTE: Search python @property
     @property
     def pre_market_open(self) -> bool:
         """
-        Check for US market activities before actual market hours
+        Check for pre-market actitivies
 
-        Use the datetime module to create US pre-market Equity hours in UTC time.
+        Uses the datetime module to create US pre-market Equity hours in UTC time.
 
         Usage:
             >>> autotrader = Robot(
@@ -117,12 +122,13 @@ class Robot:
 
         if market_start_time >= right_now >= pre_market_time:
             return True
+
         return False
 
     @property
     def post_market_open(self) -> bool:
         """
-        Check for US market activities after actual market hours
+        Check for post-market actitivities.
 
         Use the datetime module to create US post-market Equity hours in UTC time.
 
@@ -156,6 +162,7 @@ class Robot:
 
         if post_market_end_time >= right_now >= market_end_time:
             return True
+
         return False
 
     @property
@@ -238,8 +245,10 @@ class Robot:
         """
         pass
 
-    def stock_frame():
+    def create_stock_frame(self) -> Stockframe:
         """
+        Generates a new Stockframe Object.
+
         Parameter
         ---------
         data: List[dict]

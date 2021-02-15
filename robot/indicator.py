@@ -2,24 +2,27 @@ import numpy as np
 import pandas as pd
 import operator
 
-from typing import Any, List, Dict, Union, Optional, Tuple
+from typing import Any
+from typing import List
+from typing import Dict
+from typing import Union
+from typing import Optional
+from typing import Tuple
 
 from autotrader.robot import StockFrame
 
 
 class Indicator:
-    """
-    Trading indicator object for adding technical indicator to a StockFrame
-    """
+    """Trading indicator object for adding technical indicator to the StockFrame Object"""
 
     def __init__(self, price_data_frame: StockFrame) -> None:
         """
-        Initialize Indicator object
+        Initialize Indicator object.
 
         Parameters:
         ----------
         price_data_frame: robot.StockFrame
-            Price date frame used to add indicators. At a minimum this data frame must have the following columns: ['timestamp','close','open','high','low']
+            Price data frame used to add indicators. At a minimum this data frame must have the following columns: ['timestamp','close','open','high','low']
 
         Usage
         -----
@@ -87,7 +90,7 @@ class Indicator:
             Operator used to evavluate for the 'buy' condition. For example '>' represent greater than or 'operator.gt' when using the 'operator' module.
 
         condition_to_sell: Any
-            Operator used to evavluate for the 'sell' condition. For example '>' represent greater than or 'operator.gt' when using the 'operator' module.
+            Operator used to evavluate for the 'sell' condition. For example '<' represent less than or 'operator.lt' when using the 'operator' module.
         """
 
         # Add key if it doen't exist.
@@ -121,6 +124,10 @@ class Indicator:
         --------
         price_data_frame: pd.Dataframe
             A multi-index data frame.
+
+        Return
+        ------
+        None -- returns nothing
         """
 
         self._frame = price_data_frame

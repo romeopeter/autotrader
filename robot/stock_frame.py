@@ -10,7 +10,11 @@ from pandas.core.window import RollingGroupby
 
 
 class StockFrame:
-    """StockFrame object stores all price data, adds indicator and handles the appending, organizing and deleting of data"""
+    """
+    Initializes the Stock Data Frame Object.
+
+    StockFrame object stores all price data, adds indicator and handles the appending, organizing and deleting of data.
+    """
 
     def __init__(self, data: List[dict]) -> None:
         """
@@ -20,6 +24,10 @@ class StockFrame:
         ---------
         data: List[dict]
             Data to convert to frame, normally this is from the historic price endpoint.
+
+        Returns
+        -------
+        None -- Nothing is returned
         """
 
         self._data = data
@@ -35,7 +43,7 @@ class StockFrame:
         Returns
         -------
         pd.DataFrame
-           A Pandas data frame with price data.
+           A Pandas data frame with the price data.
         """
         return self._frame
 
@@ -54,7 +62,7 @@ class StockFrame:
             A `pandas.core.groupby.GroupBy` object with each symbol.
         """
 
-        self._symbol_groups = self._frame.groupby(
+        self._symbol_groups: DataFrameGroupBy = self._frame.groupby(
             by="symbol", as_index=False, sort=True
         )
 
@@ -69,15 +77,19 @@ class StockFrame:
         size: int
             Window size
 
+        Parameter
+        ---------
+        size: int
+            The size of the window
+
         Returns
         -------
-        RollingGroupby
-            A `pandas.core.window.RollingGroupby` object.
+        RollingGroupby: object -- A `pandas.core.window.RollingGroupby` object.
         """
 
         # If no symbol, then create symbol
         if not self._symbol_groups:
-            self.symbol_group
+            self.symbol_groups()
 
         self._symbol_rolling_groups: RollingGroupby = self._symbol_groups.rolling(size)
 
@@ -89,8 +101,7 @@ class StockFrame:
 
         Return
         ------
-        pd.DataFrame
-            A pandas datafrane
+        pd.DataFrame: object -- A pandas datafrane
         """
 
         # Make data frame
@@ -128,7 +139,7 @@ class StockFrame:
         Parameters
         --------
         price_df: pd.DataFrame
-            Price data frame object
+            Price data frame
 
         Returns
         -------

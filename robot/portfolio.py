@@ -1,4 +1,10 @@
-from typing import List, Dict, Union, Tuple, Optional
+from typing import List
+from typing import Dict
+from typing import Union
+from typing import Tuple
+from typing import Optional
+
+from td.client import TDClient
 
 
 class Portfolio:
@@ -22,7 +28,9 @@ class Portfolio:
         self.market_value = 0.00
         self.profit_loss = 0.00
         self.risk_tolerance = 0.00
+
         self.account_number = account_number
+        self._td_client: TDClient = None
 
     def add_position(
         self,
@@ -254,6 +262,28 @@ class Portfolio:
                 return True
 
             return False
+
+    @property
+    def td_client(self) -> TDClient:
+        """Gets the TDClient object for the Portfolio
+
+        Returns:
+        ------
+        {TDClient} -- An authenticated session with the TD API.
+        """
+
+        return self._td_client
+
+    @td_client.setter
+    def td_client(self, td_client: TDClient):
+        """Sets the TDClient object for the Portfolio
+
+        Parameters:
+        ----------
+        td_client {TDClient} -- An authenticated session with the TD API.
+        """
+
+        self._td_client = td_client
 
     def total_allocation(self):
         """Returns a summary of the portfolio by asset allocation"""

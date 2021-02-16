@@ -9,9 +9,9 @@ from datetime import datetime, timezone, time
 
 from typing import List, Dict, Union
 
-from robot import Trade
-from robot import Portfolio
-from robot import Stockframe
+from robot.trades import Trade
+from robot.portfolio import Portfolio
+from robot.stock_frame import StockFrame
 
 
 # Timestamp conversion to milliseconds
@@ -26,9 +26,10 @@ class Robot:
     def __init__(
         self,
         client_id: str,
-        redirect_url: str,
+        redirect_uri: str,
         credential_path: str = None,
         trading_account: str = None,
+        paper_trading: bool = True,
     ) -> None:
         """
         Initialize instance of robot and logs into stock API platform
@@ -54,12 +55,13 @@ class Robot:
         """
 
         self.client_id: str = client_id
-        self.redirect_url: str = redirect_url
+        self.redirect_uri: str = redirect_uri
         self.credential_path: str = credential_path
         self.session: TDClient = self._create_session()
         self.trades: dict = {}
         self.historical_prices: dict = {}
         self.stock_frame = None
+        self.paper_trading = paper_trading
 
     def _create_session(self) -> TDClient:
         """
@@ -207,7 +209,7 @@ class Robot:
 
     def create_portfolio(self) -> Portfolio:
         """
-        Creates new portfolio
+        Creates new portfolio object
 
         Creates a Portfolio Object to help store and organize positions
         as they are added and removed during trading.
@@ -229,7 +231,14 @@ class Robot:
             portfolio object to store positions
 
         """
-        pass
+
+        # Initialize 'Portfolio' object
+        self.portfolio = Portfolio(account_number=self.trading_account)
+
+        # Assign trade API client to object
+        self.portfolio.td_client = self.session
+
+        return self.portfolio
 
     def create_trade(self) -> Trade:
         """
@@ -245,7 +254,7 @@ class Robot:
         """
         pass
 
-    def create_stock_frame(self) -> Stockframe:
+    def create_stock_frame(self) -> StockFrame:
         """
         Generates a new Stockframe Object.
 
@@ -261,16 +270,27 @@ class Robot:
         """
         pass
 
-    def get_quotes() -> dict:
+    def get_current_quotes(self) -> dict:
         """
-        Get current quotes for all positions in portfolio
+        Gets current quotes for all positions in portfolio
 
         Returns
         -------
         dict
             dictionary object containing all quotes and positions
         """
-        pass
+
+        if not self.portfolio:
+            # Call method to create portfolio object
+            self.create_portfolio()
+
+            # Grab all postion symbols as keys
+            symbols = self.portfolio.positions.keys()
+
+            # get all quotes
+            quotes = self.session.get_quotes(instruments=list(symbols))
+
+            return quotes
 
     def get_historical_prices() -> List[Dict]:
         """

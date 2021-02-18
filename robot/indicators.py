@@ -9,7 +9,7 @@ from typing import Union
 from typing import Optional
 from typing import Tuple
 
-from autotrader.robot import StockFrame
+from robot.stock_frame import StockFrame
 
 
 class Indicator:

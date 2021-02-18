@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import List, Dict, Union, Optional
 
 
-class Trades:
+class Trade:
     """
-    Object represents stock trades. This is used to create new trade, add customisation trades, and modify excisting content.
+    Object represents stock trades. This is used to create new trade, add custome trades, and modify existing content.
     """
 
     def __init__(self):

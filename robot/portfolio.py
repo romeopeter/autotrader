@@ -94,7 +94,7 @@ class Portfolio:
 
         return self.positions
 
-    def add_positions(self, positions: List(dict)) -> dict:
+    def add_positions(self, positions: List[dict]) -> dict:
         """
         Add multiple positions to portfolio the portfolio at once.
 

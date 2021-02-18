@@ -7,7 +7,10 @@ from td.utils import TDUtilities
 
 from datetime import datetime, timezone, time
 
-from typing import List, Dict, Union
+from typing import List
+from typing import Dict
+from typing import Union
+from typing import Optional
 
 from robot.trades import Trade
 from robot.portfolio import Portfolio
@@ -27,8 +30,8 @@ class Robot:
         self,
         client_id: str,
         redirect_uri: str,
-        credential_path: str = None,
-        trading_account: str = None,
+        credentials_path: Optional[str] = None,
+        trading_account: Optional[str] = None,
         paper_trading: bool = True,
     ) -> None:
         """
@@ -42,7 +45,7 @@ class Robot:
         redirect_url: str
             API fallback URL associated with TDAmeritrade
 
-        credential_path: str, optional
+        credentials_path: str, optional
             Path to API client credential
 
         trading_account: str, optional
@@ -56,7 +59,7 @@ class Robot:
 
         self.client_id: str = client_id
         self.redirect_uri: str = redirect_uri
-        self.credential_path: str = credential_path
+        self.credentials_path: str = credentials_path
         self.session: TDClient = self._create_session()
         self.trades: dict = {}
         self.historical_prices: dict = {}
@@ -77,8 +80,8 @@ class Robot:
         # Create a new instance instance of the client
         td_api_client = TDClient(
             client_id=self.client_id,
-            redirect_url=self.redirect_url,
-            credential_path=self.credential_path,
+            redirect_uri=self.redirect_uri,
+            credentials_path=self.credentials_path,
         )
 
         # Start session by loging in client

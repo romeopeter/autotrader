@@ -14,7 +14,7 @@ I learnt how to use Pandas and Numpy...so I consider that a win.
 I'm open for freelance and contract gigs. 
 Check out my other projects and reach out to me if I'm a fit.
 
-[My email][hello@romeopeter.com]
+[My email](hello@romeopeter.com)
 [Portfolio](https://romeopeter.com/projects)
 [Blog](https://romeopeter.com/blog)
 [Twitter](https://twitter.com/_romeopeter)

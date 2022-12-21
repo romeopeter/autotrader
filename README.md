@@ -2,8 +2,6 @@
 
 A Python bot for mimicking trading financial instrument on behalf of human using the [TDAmeritrade API](https://developer.tdameritrade.com/apis).
 
-This project was based on a tutorial by [Alex Reed](https://github.com/areed1192).
-
 I lost the motivation to continue building and customizing due to not being able to sign up for a TDAmeritrade account from my region.
 
 I might come back to it later (Assuming my documentation helps) with an alternative API platform though, but for now? Nah!
